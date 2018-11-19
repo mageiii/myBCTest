@@ -3,14 +3,18 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.*;
 
 import java.io.*;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
 public class Test {
 
     public static void main(String[] args) throws IOException {
         String certFilePath = "/Users/mage/project/bcprov-jdk15on-160/src/main/test/makeStampOrg.cer";
         byte[] certSrc = InputStream2ByteArray(certFilePath);
+
         byte[] certInfo = getCSPK(certSrc);
-        saveFileWithBytes(certInfo,"/Users/mage/project/gmcertparseTest/","test.cer");
+//        saveFileWithBytes(certInfo,"/Users/mage/project/gmcertparseTest/","test.cer");
 
     }
     private static byte[] InputStream2ByteArray(String filePath) throws IOException {
@@ -33,7 +37,7 @@ public class Test {
         return out.toByteArray();
     }
 
-    public static byte[] getCSPK_new(byte[] csCert)
+/*    public static byte[] getCSPK_new(byte[] csCert)
     {
         InputStream inStream = new ByteArrayInputStream(csCert);
         ASN1Sequence seq = null;
@@ -52,11 +56,10 @@ public class Test {
         }
         catch (Exception e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
     public static byte[] getCSPK(byte[] csCert)
     {
         InputStream inStream = new ByteArrayInputStream(csCert);

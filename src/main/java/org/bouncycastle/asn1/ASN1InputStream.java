@@ -183,9 +183,6 @@ public class ASN1InputStream
                     return DERFactory.createSet(buildDEREncodableVector(defIn));
                 case EXTERNAL:
                     return new DERExternal(buildDEREncodableVector(defIn));
-                case 0x0D:
-                    ASN1OctetString[] str = new ASN1OctetString[10];
-                    return new BEROctetString(str);
                 default:
                     throw new IOException("unknown tag " + tagNo + " encountered");
             }
