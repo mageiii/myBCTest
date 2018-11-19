@@ -1,6 +1,7 @@
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.*;
+import org.bouncycastle.util.certificate.PemCert;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -11,10 +12,11 @@ public class Test {
 
     public static void main(String[] args) throws IOException {
         String certFilePath = "E:\\wk\\myBCTest\\src\\main\\test\\makeStampOrg.cer";
-        Reader rd = new FileReader(certFilePath);
+        /*Reader rd = new FileReader(certFilePath);
         PemReader pr = new PemReader(rd);
         PemObject pemCert =  pr.readPemObject();
-        byte[] certInfo = getCSPK(pemCert.getContent());
+        byte[] certInfo = getCSPK(pemCert.getContent());*/
+        PemCert pemCert = new PemCert(certFilePath,true);
 
     }
     public static byte[] getCSPK(byte[] csCert)
