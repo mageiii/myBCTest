@@ -1,23 +1,39 @@
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.*;
-import org.bouncycastle.util.certificate.PemCert;
-import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.util.io.pem.PemObject;
-import org.bouncycastle.util.io.pem.PemReader;
+import org.bouncycastle.util.certificate.CertInfoTem;
+import org.bouncycastle.util.certificate.CertParser;
+import org.bouncycastle.util.certificate.PemCertParser;
 
 import java.io.*;
 
-public class Test {
+public class SM2Test {
 
     public static void main(String[] args) throws IOException {
-        String certFilePath = "E:\\wk\\myBCTest\\src\\main\\test\\makeStampOrg.cer";
-        /*Reader rd = new FileReader(certFilePath);
-        PemReader pr = new PemReader(rd);
-        PemObject pemCert =  pr.readPemObject();
-        byte[] certInfo = getCSPK(pemCert.getContent());*/
-        PemCert pemCert = new PemCert(certFilePath,true);
+        String certFilePath = "/Users/mage/project/bcprov-jdk15on-160/src/main/test/makeStampOrg.cer";
+        CertParser pemCertParser = new PemCertParser();
+        CertInfoTem CertInfoTem = pemCertParser.parseCert(InputStream2ByteArray(certFilePath));
+        System.out.println(pemCertParser.getCurCertStyle());
 
+    }
+    private static byte[] InputStream2ByteArray(String filePath) throws IOException {
+
+        InputStream in = new FileInputStream(filePath);
+        byte[] data = toByteArray(in);
+        in.close();
+
+        return data;
+    }
+
+    private static byte[] toByteArray(InputStream in) throws IOException {
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024 * 4];
+        int n = 0;
+        while ((n = in.read(buffer)) != -1) {
+            out.write(buffer, 0, n);
+        }
+        return out.toByteArray();
     }
     public static byte[] getCSPK(byte[] csCert)
     {
