@@ -42,7 +42,7 @@ public class PemCertParser extends CertParser{
     @Override
     public boolean isCurParseStyle(byte[] certSrc) {
         String certStr = new String(certSrc);
-        if (certStr.startsWith(BEGIN+CERTIFICATE) && certStr.endsWith(END+CERTIFICATE)){
+        if (certStr.contains(BEGIN+CERTIFICATE) && certStr.contains(END+CERTIFICATE)){
             return true;
         }
         return false;
