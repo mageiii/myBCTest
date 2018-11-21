@@ -26,17 +26,12 @@ public class PemCertParser extends CertParser{
         }
         try {
             certInfo = X509toCertInfo(
-                    pemCert2CertInfo(certSrc)
+                    pemCert2X509(certSrc)
             );
         } catch (IOException e) {
             e.printStackTrace();
         }
         return certInfo;
-    }
-
-    @Override
-    public String getCurCertStyle() {
-        return parseStyle;
     }
 
     @Override
@@ -48,21 +43,7 @@ public class PemCertParser extends CertParser{
         return false;
     }
 
-    private CertInfoTem X509toCertInfo(X509CertificateStructure x509Cert) throws IOException {
-        CertInfoTem CertInfoTem = new CertInfoTem();
-        CertInfoTem.setVersion(x509Cert.getVersion());
-        CertInfoTem.setSerialNumber(x509Cert.getSerialNumber().toString());
-        CertInfoTem.setSubject(x509Cert.getSubject().toString());
-        CertInfoTem.setIssuer(x509Cert.getIssuer().toString());
-        CertInfoTem.setStartTime(x509Cert.getStartDate());
-        CertInfoTem.setEndTime(x509Cert.getEndDate());
-        CertInfoTem.setPublicKey(x509Cert.getSubjectPublicKeyInfo().getPublicKeyData().getEncoded());
-        CertInfoTem.setSignature(BitSetConvertor.byteArray2BitSet(x509Cert.getSignature().getEncoded()));
-        CertInfoTem.setAlgorithm(x509Cert.getSignatureAlgorithm().getAlgorithm().toString());
-        return CertInfoTem;
-    }
-
-    private X509CertificateStructure pemCert2CertInfo(byte[] certSrcBytes) throws IOException {
+    private X509CertificateStructure pemCert2X509(byte[] certSrcBytes) throws IOException {
         Reader rd = null;
         PemReader pr = null;
         PemObject pemCert = null;
@@ -78,19 +59,8 @@ public class PemCertParser extends CertParser{
             rd.close();
             pr.close();
         }
-        InputStream inStream = new ByteArrayInputStream(pemCert.getContent());
-        ASN1Sequence seq = null;
-        ASN1InputStream aIn = new ASN1InputStream(inStream);
-        try{
-            seq = (ASN1Sequence)aIn.readObject();
-            X509CertificateStructure cert = new X509CertificateStructure(seq);
-            return cert;
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            inStream.close();
-            aIn.close();
-        }
+        X509CertificateStructure cert = DerCertParser.getX509CertificateStructure(pemCert.getContent());
+        if (cert != null) return cert;
         return null;
     }
 

@@ -1,20 +1,22 @@
-import org.bouncycastle.asn1.*;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x509.*;
-import org.bouncycastle.util.certificate.CertInfoTem;
-import org.bouncycastle.util.certificate.CertParser;
-import org.bouncycastle.util.certificate.PemCertParser;
+import org.bouncycastle.util.certificate.*;
 
 import java.io.*;
 
 public class SM2Test {
 
     public static void main(String[] args) throws IOException {
-        String certFilePath = "/Users/mage/project/bcprov-jdk15on-160/src/main/test/makeStampOrg.cer";
-        CertParser pemCertParser = new PemCertParser();
-        CertInfoTem CertInfoTem = pemCertParser.parseCert(InputStream2ByteArray(certFilePath));
-        System.out.println(pemCertParser.getCurCertStyle());
+        String certFilePath = "/Users/mage/project/bcprov-jdk15on-160/src/main/test/sm2certTest.cer";
+        byte[] certBytes = InputStream2ByteArray(certFilePath);
+        CertParser certParser = new PemCertParser();
+        CertInfoTem certInfoTem;
+        if(certParser.isCurParseStyle(certBytes)){
+            certInfoTem = certParser.parseCert(certBytes);
+        }else {
+            certParser = new DerCertParser();
+            certInfoTem = certParser.parseCert(certBytes);
+        }
 
+        System.out.println(CertParser.getCurCertStyle());
     }
     private static byte[] InputStream2ByteArray(String filePath) throws IOException {
 
@@ -34,41 +36,5 @@ public class SM2Test {
             out.write(buffer, 0, n);
         }
         return out.toByteArray();
-    }
-    public static byte[] getCSPK(byte[] csCert)
-    {
-        InputStream inStream = new ByteArrayInputStream(csCert);
-        ASN1Sequence seq = null;
-        ASN1InputStream aIn;
-        try
-        {
-            aIn = new ASN1InputStream(inStream);
-            seq = (ASN1Sequence)aIn.readObject();
-            X509CertificateStructure cert = new X509CertificateStructure(seq);
-            ASN1Integer aserialNumber= cert.getSerialNumber();// 序列号
-            String serialNumber=aserialNumber.toString();
-            X500Name name= cert.getSubject();// 使用者
-            X500Name issuer= cert.getIssuer(); // 颁发者
-            Time stime=  cert.getStartDate(); // 有效期
-            Time etime=cert.getEndDate();// 到
-            DERBitString d=cert.getSignature();
-            AlgorithmIdentifier alg= cert.getSignatureAlgorithm();
-            ASN1ObjectIdentifier identifier= alg.getAlgorithm();// 签名算法
-
-            SubjectPublicKeyInfo subjectPublicKeyInfo = cert.getSubjectPublicKeyInfo();
-
-            DERBitString publicKeyData = subjectPublicKeyInfo.getPublicKeyData();
-            byte[] publicKey = publicKeyData.getEncoded();
-            byte[] encodedPublicKey = publicKey;// 公钥
-            byte[] eP = new byte[64];
-            System.arraycopy(encodedPublicKey, 4, eP, 0, eP.length);
-            return eP;
-        }
-        catch (Exception e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
     }
 }
