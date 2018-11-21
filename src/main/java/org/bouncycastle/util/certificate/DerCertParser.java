@@ -16,8 +16,8 @@ public class DerCertParser extends CertParser {
 
     @Override
     public CertInfoTem parseCert(byte[] certSrc) {
-        if(!isCurParseStyle(certSrc)){
-            System.out.println("该cert非" + getCurCertStyle() + "格式！");
+        if(isPemParseStyle(certSrc)){
+            System.out.println("该cert是" + getCurCertStyle() + "格式！");
             return certInfo;
         }
         try {

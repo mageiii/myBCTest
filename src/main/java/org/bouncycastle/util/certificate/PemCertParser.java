@@ -10,9 +10,7 @@ import org.bouncycastle.util.io.pem.PemReader;
 import java.io.*;
 
 public class PemCertParser extends CertParser{
-    private static final String BEGIN = "-----BEGIN ";
-    private static final String END = "-----END ";
-    private static final String CERTIFICATE = "CERTIFICATE-----";
+
 
     public PemCertParser() {
         parseStyle = "PEM";
@@ -20,7 +18,7 @@ public class PemCertParser extends CertParser{
 
     @Override
     public CertInfoTem parseCert(byte[] certSrc) {
-        if(!isCurParseStyle(certSrc)){
+        if(!isPemParseStyle(certSrc)){
             System.out.println("该cert非" + getCurCertStyle() + "格式！");
             return certInfo;
         }
@@ -32,15 +30,6 @@ public class PemCertParser extends CertParser{
             e.printStackTrace();
         }
         return certInfo;
-    }
-
-    @Override
-    public boolean isCurParseStyle(byte[] certSrc) {
-        String certStr = new String(certSrc);
-        if (certStr.contains(BEGIN+CERTIFICATE) && certStr.contains(END+CERTIFICATE)){
-            return true;
-        }
-        return false;
     }
 
     private X509CertificateStructure pemCert2X509(byte[] certSrcBytes) throws IOException {

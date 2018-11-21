@@ -13,6 +13,9 @@ public abstract class CertParser {
 
     protected CertInfoTem certInfo = null;//转换后的证书信息
     protected  static String parseStyle = "default";//转换证书类型
+    private static final String BEGIN = "-----BEGIN ";
+    private static final String END = "-----END ";
+    private static final String CERTIFICATE = "CERTIFICATE-----";
     public CertParser() {}
     /**
      * 证书转换函数
@@ -24,13 +27,18 @@ public abstract class CertParser {
     }
 
     /**
-     * 判断源cert类型与当前parser转换的类型是否一致
+     * 判断源cert类型是否PEM，非PEM即DER
      * @param certSrc
      * @return
      */
-    public boolean isCurParseStyle(byte[] certSrc){
+    public static boolean isPemParseStyle(byte[] certSrc){
+        String certStr = new String(certSrc);
+        if (certStr.contains(BEGIN+CERTIFICATE) && certStr.contains(END+CERTIFICATE)){
+            return true;
+        }
         return false;
     }
+
 
     protected CertInfoTem X509toCertInfo(X509CertificateStructure x509Cert) throws IOException {
         return getCertInfoTem(x509Cert);
