@@ -7,13 +7,11 @@ public class SM2Test {
     public static void main(String[] args) throws IOException {
         String certFilePath = "/Users/mage/project/bcprov-jdk15on-160/src/main/test/sm2certTest.cer";
         byte[] certBytes = InputStream2ByteArray(certFilePath);
-        CertParser certParser = new PemCertParser();
         CertInfoTem certInfoTem;
-        if(certParser.isCurParseStyle(certBytes)){
-            certInfoTem = certParser.parseCert(certBytes);
-        }else {
-            certParser = new DerCertParser();
-            certInfoTem = certParser.parseCert(certBytes);
+        if(CertParser.isPemParseStyle(certBytes)){
+            certInfoTem = new PemCertParser().parseCert(certBytes);
+        }else{
+            certInfoTem = new DerCertParser().parseCert(certBytes);
         }
 
         System.out.println(CertParser.getCurCertStyle());
