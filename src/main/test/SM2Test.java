@@ -1,11 +1,12 @@
+
 import org.bouncycastle.util.certificate.*;
 
 import java.io.*;
 
 public class SM2Test {
 
-    public static void main(String[] args) throws IOException {
-        String certFilePath = "/Users/mage/project/bcprov-jdk15on-160/src/main/test/sm2certTest.cer";
+    public static void main(String[] args) throws Exception {
+        String certFilePath = "./src/main/test/sm2certTest.cer";
         byte[] certBytes = InputStream2ByteArray(certFilePath);
         CertInfoTem certInfoTem;
         if(CertParser.isPemParseStyle(certBytes)){
@@ -13,7 +14,6 @@ public class SM2Test {
         }else{
             certInfoTem = new DerCertParser().parseCert(certBytes);
         }
-
         System.out.println(CertParser.getCurCertStyle());
     }
     private static byte[] InputStream2ByteArray(String filePath) throws IOException {
