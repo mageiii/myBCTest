@@ -15,10 +15,13 @@ public class DerCertParser extends CertParser {
     }
 
     @Override
-    public CertInfoTem parseCert(byte[] certSrc) {
+    public CertInfoTem parseCert(byte[] certSrc) throws Exception {
+        if(certSrc == null){
+            throw new Exception("certSrc为null");
+        }
         if(isPemParseStyle(certSrc)){
             System.out.println("该cert是" + getCurCertStyle() + "格式！");
-            return certInfo;
+            throw new Exception("cert源为Pem非Der编码格式");
         }
         try {
             certInfo = X509toCertInfo(

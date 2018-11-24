@@ -11,7 +11,7 @@ import java.io.InputStream;
 
 public abstract class CertParser {
 
-    protected CertInfoTem certInfo = null;//转换后的证书信息
+    protected CertInfoTem certInfo = new CertInfoTem();//转换后的证书信息
     protected  static String parseStyle = "default";//转换证书类型
     private static final String BEGIN = "-----BEGIN ";
     private static final String END = "-----END ";
@@ -22,7 +22,7 @@ public abstract class CertParser {
      * @param certSrc
      * @return
      */
-    public CertInfoTem parseCert(byte[] certSrc){
+    public CertInfoTem parseCert(byte[] certSrc) throws Exception {
         return null;
     }
 
@@ -60,8 +60,8 @@ public abstract class CertParser {
         CertInfoTem.setIssuer(x509Cert.getIssuer().toString());
         CertInfoTem.setStartTime(x509Cert.getStartDate());
         CertInfoTem.setEndTime(x509Cert.getEndDate());
-        CertInfoTem.setPublicKey(x509Cert.getSubjectPublicKeyInfo().getPublicKeyData().getEncoded());
-        CertInfoTem.setSignature(BitSetConvertor.byteArray2BitSet(x509Cert.getSignature().getEncoded()));
+        CertInfoTem.setPublicKey(x509Cert.getSubjectPublicKeyInfo().getPublicKeyData().getBytes());
+        CertInfoTem.setSignature(BitSetConvertor.byteArray2BitSet(x509Cert.getSignature().getBytes()));
         CertInfoTem.setAlgorithm(x509Cert.getSignatureAlgorithm().getAlgorithm().toString());
         return CertInfoTem;
     }
