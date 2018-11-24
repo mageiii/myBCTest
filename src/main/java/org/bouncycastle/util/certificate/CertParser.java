@@ -31,7 +31,10 @@ public abstract class CertParser {
      * @param certSrc
      * @return
      */
-    public static boolean isPemParseStyle(byte[] certSrc){
+    public static boolean isPemParseStyle(byte[] certSrc) throws Exception {
+        if (certSrc == null){
+            throw new Exception("certSrc为null");
+        }
         String certStr = new String(certSrc);
         if (certStr.contains(BEGIN+CERTIFICATE) && certStr.contains(END+CERTIFICATE)){
             return true;
